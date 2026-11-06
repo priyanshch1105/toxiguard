@@ -1,0 +1,18 @@
+[
+  {
+    "text": "Thanks for the helpful explanation on the talk page.",
+    "expect_toxic": false
+  },
+  {
+    "text": "You are a stupid idiot and nobody likes you.",
+    "expect_toxic": true
+  },
+  {
+    "text": "I will kill you if you keep writing this garbage.",
+    "expect_toxic": true
+  },
+  {
+    "text": "Please stop removing sourced content from the article.",
+    "expect_toxic": false
+  }
+]
