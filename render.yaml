@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: sentinel-guard
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -b 0.0.0.0:$PORT -w 1 run:app
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:///database/sentinel.db
+      - key: PYTHONUNBUFFERED
+        value: "1"
