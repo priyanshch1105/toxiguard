@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SentinelGuard</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img src="icons/icon32.png" alt="" width="24" height="24">
+      <div>
+        <strong>SentinelGuard</strong>
+        <small>Live comment shield</small>
+      </div>
+    </div>
+    <span id="siteChip">Detecting site</span>
+  </header>
+
+  <label for="apiUrl">API URL</label>
+  <input id="apiUrl" type="url" placeholder="http://127.0.0.1:5000">
+  <p class="hint">Local: http://127.0.0.1:5000 &nbsp; Render: https://your-app.onrender.com</p>
+
+  <label class="switch">
+    <input id="enabled" type="checkbox" checked>
+    <span>Scan this page</span>
+  </label>
+  <label class="switch">
+    <input id="hideToxic" type="checkbox">
+    <span>Blur toxic messages</span>
+  </label>
+
+  <div class="stats">
+    <div><span>Scanned</span><strong id="scanned">0</strong></div>
+    <div><span>Safe</span><strong id="safe">0</strong></div>
+    <div><span>Toxic</span><strong id="toxic">0</strong></div>
+  </div>
+
+  <button id="scanNow" type="button">Scan visible messages</button>
+  <p id="status"></p>
+  <script src="popup.js"></script>
+</body>
+</html>

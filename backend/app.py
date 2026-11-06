@@ -4,6 +4,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 from flask import Flask, jsonify, render_template, request, send_from_directory
+from flask_cors import CORS
 
 from backend.config import Config
 from backend.models import Analysis, init_db
@@ -23,6 +24,7 @@ def create_app():
         static_url_path="/static",
     )
     app.config.from_object(Config)
+    CORS(app, resources={r"/api/*": {"origins": "*"}, r"/health": {"origins": "*"}})
     _, SessionLocal = init_db(app.config["DATABASE_URL"])
     app.session_factory = SessionLocal
 
@@ -77,6 +79,51 @@ def create_app():
         finally:
             session.close()
         return jsonify(result)
+
+    @app.post("/api/analyze-batch")
+    def analyze_batch():
+        payload = request.get_json(silent=True) or {}
+        items = payload.get("texts") or []
+        source = str(payload.get("source", "extension"))[:64]
+        if not isinstance(items, list) or not items:
+            return jsonify({"error": "texts must be a non-empty list."}), 400
+        if len(items) > 20:
+            return jsonify({"error": "A maximum of 20 texts can be analyzed at once."}), 400
+
+        results = []
+        session = app.session_factory()
+        try:
+            for text in items:
+                try:
+                    result = classify_text(str(text), max_length=app.config["MAX_TEXT_LENGTH"])
+                except ValueError as exc:
+                    results.append({"error": str(exc), "text": str(text)[:120]})
+                    continue
+                except ModelNotReadyError as exc:
+                    return jsonify({"error": str(exc)}), 503
+                row = Analysis(
+                    comment_text=result["text"],
+                    clean_text=result["clean_text"],
+                    is_toxic=result["is_toxic"],
+                    moderation_result=result["moderation_result"],
+                    toxic=result["labels"]["toxic"]["score"],
+                    severe_toxic=result["labels"]["severe_toxic"]["score"],
+                    obscene=result["labels"]["obscene"]["score"],
+                    threat=result["labels"]["threat"]["score"],
+                    insult=result["labels"]["insult"]["score"],
+                    identity_hate=result["labels"]["identity_hate"]["score"],
+                    max_confidence=result["max_confidence"],
+                    triggered_labels=json.dumps(result["triggered_labels"]),
+                    source=source,
+                )
+                session.add(row)
+                session.flush()
+                result["id"] = row.id
+                results.append(result)
+            session.commit()
+        finally:
+            session.close()
+        return jsonify({"results": results})
 
     @app.get("/api/history")
     def history():

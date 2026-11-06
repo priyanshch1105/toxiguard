@@ -1,0 +1,16 @@
+.sg-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font: 600 11px/1.4 "Segoe UI", sans-serif;
+  vertical-align: middle;
+  cursor: help;
+}
+.sg-badge.sg-safe { background: #14532d; color: #bbf7d0; }
+.sg-badge.sg-review { background: #78350f; color: #fde68a; }
+.sg-badge.sg-block { background: #7f1d1d; color: #fecaca; }
+.sg-blur { filter: blur(6px); }
+.sg-blur:hover { filter: none; }

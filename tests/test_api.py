@@ -35,6 +35,10 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.get_json(), list)
 
+    def test_analyze_batch_rejects_empty(self):
+        response = self.client.post("/api/analyze-batch", json={"texts": []})
+        self.assertEqual(response.status_code, 400)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -94,10 +94,22 @@ Open `http://127.0.0.1:5000`.
 API endpoints:
 
 - `POST /api/analyze` body: `{ "text": "..." }`
+- `POST /api/analyze-batch` body: `{ "texts": ["..."] }`
 - `GET /api/history`
 - `GET /api/analytics`
 - `GET /api/metrics`
 - `GET /health`
+
+## Chrome extension
+
+Folder: `extension/`
+
+1. Start the app locally or use your Render URL.
+2. Chrome: `chrome://extensions` → Developer mode → Load unpacked → select `extension`.
+3. Popup me API URL set karo (`http://127.0.0.1:5000` ya Render URL).
+4. YouTube comments, LinkedIn feed, ya WhatsApp Web kholo aur Scan dabao.
+
+Badges: SAFE / REVIEW / BLOCK. Optional: Blur toxic messages.
 
 ## Tests
 
